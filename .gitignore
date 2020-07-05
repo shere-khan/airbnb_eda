@@ -4,3 +4,4 @@ venv/
 *.xml
 data/
 .idea/
+.ipynb_checkpoints/

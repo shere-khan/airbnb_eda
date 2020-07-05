@@ -14,10 +14,10 @@ def main():
     # df = keep_cols(df, "doc/columns/listings_interesting_columns.txt")
 
     # Plot correlation map.
-    corr_plot(df)
+    # corr_plot(df)
 
     # Date vs number of listings. Did number of listings decrease after shutdown?
-    # date_x_num_listings(df)
+    date_x_num_listings(df)
 
 def find_numeric_columns(df):
     dts = pd.DataFrame(df.dtypes)
@@ -34,13 +34,8 @@ def corr_plot(df):
     plt.show()
 
 def date_x_num_listings(df):
-    # Filter out junk dates.
-    date_path = "doc/dates/valid_dates.txt"
-    dates = get_list_from_text(date_path)
-    df = df[df["last_scraped"].isin(dates)]
-
-    # Group by date and plot num of listings by date.
-    df_ = df.groupby("last_scraped").agg({"id": "count"})
+    df["last_scraped"] = pd.to_datetime(df["last_scraped"])
+    df_ = df.groupby(pd.Grouper(key="last_scraped", freq="M")).agg({"id": "count"})
     df_ = df_.reset_index()
     plt.figure(figsize=(20, 10))
     sns.lineplot(data=df_, x="last_scraped", y="id")
