@@ -1,0 +1,4 @@
+-run clustering (w2v) on "name" column to see if there is a relationship between name listing style and bookings.
+-image embeddings and see if there is a relationship between name listing style and bookings.
+    -average the embeddings of one listing (multiple images) together
+- attributes of listings that failed once covid hit
