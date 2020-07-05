@@ -1,0 +1,6 @@
+extra_people
+monthly_price
+weekly_price
+cleaning_fee
+price
+security_deposit

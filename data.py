@@ -6,18 +6,31 @@ import os
 
 def main():
     path = "data"
-    df = load_data(path)
-
+    # df = load_data(path, "listings", lambda x, y: x != y)
+    df = load_data(path, "calendar", lambda x, y: x != y)
+    # df = load_data(path, "listings", lambda x, y: x == y)
+    df["booked"] = 365 - df["availability_365"]
     # find_numeric_columns(df)
 
     # Remove specific columns.
     # df = keep_cols(df, "doc/columns/listings_interesting_columns.txt")
 
     # Plot correlation map.
-    # corr_plot(df)
+    corr_plot(df)
 
     # Date vs number of listings. Did number of listings decrease after shutdown?
-    date_x_num_listings(df)
+    # date_x_num_listings(df)
+
+def change_currency_cols_to_float(df):
+    col = get_list_from_text("doc/columns/money.txt")
+    def change(x):
+        return x.replace("$", "").replace(",", "")
+    for c in col:
+        df[f"{c}"] = df[f"{c}"].fillna(0)
+        df[f"{c}"] = df[f"{c}"].astype(str)
+        df[f"{c}"] = df[f"{c}"].apply(change)
+        df[f"{c}"] = df[f"{c}"].astype("float64")
+    return df
 
 def find_numeric_columns(df):
     dts = pd.DataFrame(df.dtypes)
@@ -28,6 +41,7 @@ def find_numeric_columns(df):
 
 def corr_plot(df):
     # Correlation plot.
+    df = change_currency_cols_to_float(df)
     df = keep_cols(df, "doc/columns/corrplot.txt")
     plt.figure(figsize=(20, 20))
     heat_map = sns.heatmap(df)
@@ -58,15 +72,15 @@ def remove_cols(df, path):
     df_ = df.drop(rem, axis=1)
     return df_
 
-def load_data(dir):
+def load_data(dir, name, f):
     path = os.walk(dir)
     dfs = []
     for root, directories, files in path:
         for file in files:
-            if root.split("/")[-1] != "summary":
-                if file.split(".")[0] == "listings":
-                    f = Path(root) / file
-                    dfs.append(pd.read_csv(f))
+            if f(root.split("/")[-1], "summary"):
+                if file.split(".")[0] == name:
+                    pth = Path(root) / file
+                    dfs.append(pd.read_csv(pth))
     df = pd.concat(dfs)
     return df
 

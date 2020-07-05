@@ -12,3 +12,11 @@ number_of_reviews
 number_of_reviews_ltm
 review_scores_rating
 reviews_per_month
+extra_people
+monthly_price
+weekly_price
+cleaning_fee
+price
+security_deposit
+availability_365
+reviews_per_month

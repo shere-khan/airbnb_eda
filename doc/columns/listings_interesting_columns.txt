@@ -49,3 +49,4 @@ requires_license
 reviews_per_month
 host_is_superhost
 last_scraped
+reviews_per_month
